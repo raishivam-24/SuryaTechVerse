@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #f8f6f1;
+  color: #10243e;
+  font-family: "IBM Plex Sans", sans-serif;
+}
+
+::selection {
+  background: #b8935b;
+  color: #ffffff;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #b8935b;
+  outline-offset: 2px;
+}
+
+.auto-scroll {
+  animation: scrollLeft 36s linear infinite;
+}
+.auto-scroll:hover {
+  animation-play-state: paused;
+}
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.hover-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(16, 36, 62, 0.1);
+}
