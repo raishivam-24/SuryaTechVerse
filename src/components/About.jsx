@@ -1,74 +1,183 @@
-import Eyebrow from "./ui/Eyebrow.jsx";
-import Rule from "./ui/Rule.jsx";
-import { FOUNDER } from "../data/content.js";
+import React from "react";
+import { about } from "../data.js";
 
 export default function About() {
   return (
-    <section id="about" className="px-5 md:px-10 py-20 md:py-28">
-      <div className="max-w-6xl mx-auto">
-        <div className="mb-14 max-w-2xl">
-          <Eyebrow>Our Vision</Eyebrow>
-          <Rule />
-          <h2 className="font-headline font-semibold text-3xl md:text-4xl text-ink">
-            Pioneering the digital frontier
+    <section id="about" style={{ padding: "160px 0", background: "var(--bg)" }}>
+      <div style={{ maxWidth: 1440, margin: "0 auto", padding: "0 24px" }}>
+        <div style={{ marginBottom: 80 }}>
+          <h2
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 600,
+              fontSize: "clamp(32px, 4vw, 40px)",
+              color: "var(--text-primary)",
+              marginBottom: 16,
+            }}
+          >
+            {about.title}
           </h2>
+          <div style={{ height: 1, width: 96, background: "linear-gradient(to right, var(--gold), transparent)" }} />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          <div className="md:col-span-8">
-            <div className="h-full rounded-lg p-8 md:p-10 flex flex-col justify-center hover-lift bg-paper border border-line">
-              <h3 className="font-headline font-semibold text-2xl mb-4 text-ink">
-                Engineering, not just delivery
-              </h3>
-              <p className="leading-relaxed mb-6 text-slate">
-                We don't hand off a build and disappear. Every engagement pairs a
-                named engineer with a named point of contact, so decisions made
-                in week one are still legible in month six.
+        <div className="stv-about-grid" style={{ display: "grid", gridTemplateColumns: "1fr", gap: 32 }}>
+          <div className="stv-col-8 glass-panel" style={{ borderRadius: 20, padding: "48px 40px", border: "1px solid var(--border)" }}>
+            <h3
+              style={{
+                fontFamily: "'Playfair Display', serif",
+                fontWeight: 600,
+                fontSize: 28,
+                color: "var(--text-primary)",
+                marginBottom: 16,
+              }}
+            >
+              {about.mission.heading}
+            </h3>
+            <p style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 17, lineHeight: 1.7, color: "var(--text-secondary)", marginBottom: 28 }}>
+              {about.mission.body}
+            </p>
+            <div style={{ display: "flex", gap: 12 }}>
+              {about.mission.tags.map((tag) => (
+                <span
+                  key={tag}
+                  style={{
+                    padding: "8px 18px",
+                    border: "1px solid var(--border-strong)",
+                    borderRadius: 999,
+                    fontFamily: "'Hanken Grotesk', sans-serif",
+                    fontSize: 13,
+                    letterSpacing: "0.05em",
+                    textTransform: "uppercase",
+                    color: "var(--gold)",
+                  }}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div
+            className="stv-col-4"
+            style={{
+              borderRadius: 20,
+              padding: 32,
+              border: "1px solid rgba(212,175,55,0.3)",
+              background: "linear-gradient(160deg, rgba(212,175,55,0.08), rgba(106,46,224,0.08))",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: "50%",
+                  background: "rgba(242,202,80,0.15)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginBottom: 24,
+                  fontSize: 24,
+                  color: "var(--gold)",
+                }}
+              >
+                ✦
+              </div>
+              <h4 style={{ fontFamily: "'Playfair Display', serif", fontWeight: 600, fontSize: 22, color: "var(--text-primary)", marginBottom: 4 }}>
+                {about.founder.name}
+              </h4>
+              <p
+                style={{
+                  fontFamily: "'Hanken Grotesk', sans-serif",
+                  fontSize: 12,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.15em",
+                  color: "var(--gold)",
+                  marginBottom: 20,
+                }}
+              >
+                {about.founder.role}
               </p>
-              <div className="flex gap-3 flex-wrap">
-                {["Innovation", "Precision", "Accountability"].map((t) => (
-                  <span
-                    key={t}
-                    className="px-4 py-2 rounded-sm text-xs font-medium bg-cream text-ink border border-line"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
+              <p style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 15, lineHeight: 1.6, color: "var(--text-secondary)", fontStyle: "italic" }}>
+                "{about.founder.quote}"
+              </p>
             </div>
           </div>
 
-          <div className="md:col-span-4">
-            <div className="h-full rounded-lg p-8 flex flex-col justify-between bg-ink text-cream">
-              <div>
-                <div className="w-12 h-12 rounded-full flex items-center justify-center mb-6 font-mono text-sm bg-bronze/20 text-bronze">
-                  {FOUNDER.name
-                    .split(" ")
-                    .map((p) => p[0])
-                    .join("")}
-                </div>
-                <h4 className="font-headline font-semibold text-lg mb-1">{FOUNDER.name}</h4>
-                <p className="text-xs uppercase tracking-widest mb-4 text-bronze">{FOUNDER.title}</p>
-                <p className="text-sm leading-relaxed text-line">"{FOUNDER.quote}"</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="md:col-span-12">
-            <div className="rounded-lg p-8 md:p-10 flex flex-col md:flex-row md:items-center gap-4 md:gap-8 hover-lift bg-paper border border-line">
-              <span className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-mono shrink-0 bg-cream text-ink border border-line">
-                Ed
+          <div
+            className="stv-col-4 glass-panel"
+            style={{
+              borderRadius: 20,
+              padding: 32,
+              border: "1px solid var(--border)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div style={{ textAlign: "center" }}>
+              <span
+                style={{
+                  display: "block",
+                  fontFamily: "'Playfair Display', serif",
+                  fontWeight: 700,
+                  fontSize: 52,
+                  color: "var(--gold)",
+                  marginBottom: 8,
+                }}
+              >
+                {about.stat.value}
               </span>
-              <div>
-                <h4 className="font-headline font-semibold text-lg mb-1 text-ink">
-                  Commitment to tech education
-                </h4>
-                <p className="text-slate">
-                  Alongside client work, we run training programs that put practical,
-                  high-demand skills into the hands of the next generation of technologists.
-                </p>
-              </div>
+              <span
+                style={{
+                  fontFamily: "'Hanken Grotesk', sans-serif",
+                  fontSize: 13,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.15em",
+                  color: "var(--text-secondary)",
+                }}
+              >
+                {about.stat.label}
+              </span>
             </div>
+          </div>
+
+          <div className="stv-col-8 glass-panel" style={{ borderRadius: 20, padding: 32, border: "1px solid var(--border)" }}>
+            <h4
+              style={{
+                fontFamily: "'Hanken Grotesk', sans-serif",
+                fontWeight: 500,
+                fontSize: 22,
+                color: "var(--text-primary)",
+                marginBottom: 16,
+                display: "flex",
+                alignItems: "center",
+                gap: 14,
+              }}
+            >
+              <span
+                style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: "50%",
+                  background: "rgba(242,202,80,0.12)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 20,
+                  color: "var(--gold)",
+                }}
+              >
+                🎓
+              </span>
+              {about.education.heading}
+            </h4>
+            <p style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 15, lineHeight: 1.6, color: "var(--text-secondary)" }}>
+              {about.education.body}
+            </p>
           </div>
         </div>
       </div>

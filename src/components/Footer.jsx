@@ -1,57 +1,83 @@
-import FooterCol from "./ui/FooterCol.jsx";
+import React from "react";
+import { brand, contact, footer } from "../data.js";
 
 export default function Footer() {
   return (
-    <footer className="bg-ink-deep text-line">
-      <div className="max-w-6xl mx-auto px-5 md:px-10 py-16 grid grid-cols-1 md:grid-cols-5 gap-10">
-        <div className="md:col-span-2">
-          <span className="font-headline font-semibold text-xl text-paper">SuryaTechVerse</span>
-          <p className="text-sm mt-3 max-w-xs leading-relaxed text-line/65">
-            Web, security, mobile, and marketing consulting — engineered by
-            one accountable team.
-          </p>
-          <form
-            className="mt-6 flex gap-3 max-w-xs"
-            onSubmit={(e) => e.preventDefault()}
+    <footer style={{ background: "var(--surface)", borderTop: "1px solid var(--border)" }}>
+      <div
+        style={{
+          maxWidth: 1440,
+          margin: "0 auto",
+          padding: "64px 24px",
+          display: "grid",
+          gridTemplateColumns: "1fr",
+          gap: 32,
+        }}
+        className="stv-footer-grid"
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+          <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: 24, color: "var(--gold)" }}>
+            {brand.name}
+          </div>
+          <div style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 15, color: "var(--text-secondary)", display: "flex", flexDirection: "column", gap: 8 }}>
+            <p style={{ display: "flex", alignItems: "center", gap: 8, margin: 0 }}>
+              <span style={{ color: "var(--gold)" }}>📱</span> Contact: {contact.phone}
+            </p>
+            <p style={{ display: "flex", alignItems: "center", gap: 8, margin: 0 }}>
+              <span style={{ color: "var(--gold)" }}>✉</span> {contact.businessEmail}
+            </p>
+          </div>
+          <p
+            style={{
+              fontFamily: "'Hanken Grotesk', sans-serif",
+              fontSize: 13,
+              fontWeight: 600,
+              color: "var(--gold)",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              lineHeight: 1.6,
+              maxWidth: 380,
+              margin: 0,
+            }}
           >
-            <input
-              placeholder="Your email"
-              className="flex-1 rounded-sm px-3 py-2.5 text-sm bg-transparent border border-line/30 text-paper placeholder:text-line/40"
-            />
-            <button
-              type="submit"
-              className="px-4 py-2.5 rounded-sm text-xs font-medium uppercase tracking-wide shrink-0 bg-bronze text-ink-deep hover:bg-bronze-deep transition-colors"
-            >
-              Subscribe
-            </button>
-          </form>
-        </div>
-        <FooterCol title="Company" links={["About", "Approach", "Team", "Careers"]} />
-        <FooterCol
-          title="Services"
-          links={["Web Development", "Cybersecurity", "Mobile Apps", "Digital Marketing"]}
-        />
-        <FooterCol title="Resources" links={["Case Studies", "Reviews", "FAQ", "Contact"]} />
-      </div>
-      <div className="border-t border-line/15">
-        <div className="max-w-6xl mx-auto px-5 md:px-10 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-line/55">
-            © 2026 SuryaTechVerse. Excellence in digital innovation.
+            Grow your business with us. Contact now for a consultation.
           </p>
-          <nav className="flex flex-wrap justify-center gap-6">
-            {["Privacy Policy", "Terms of Service", "Cookie Policy", "Sitemap"].map((l) => (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, fontSize: 12, color: "var(--text-muted)" }}>
+            {contact.hashtags.map((tag) => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 32, alignItems: "flex-start" }} className="stv-footer-links">
+          <div style={{ display: "flex", gap: 28, flexWrap: "wrap" }}>
+            {footer.links.map((l) => (
               <a
                 key={l}
                 href="#"
-                onClick={(e) => e.preventDefault()}
-                className="text-xs underline text-line/55"
+                style={{
+                  fontFamily: "'Hanken Grotesk', sans-serif",
+                  fontSize: 15,
+                  color: "var(--text-secondary)",
+                  textDecoration: "none",
+                }}
               >
                 {l}
               </a>
             ))}
-          </nav>
+          </div>
+          <p style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 14, color: "var(--text-muted)", margin: 0 }}>
+            {footer.copyright}
+          </p>
         </div>
       </div>
+
+      <style>{`
+        @media (min-width: 768px) {
+          .stv-footer-grid { grid-template-columns: 1fr 1fr !important; }
+          .stv-footer-links { align-items: flex-end !important; }
+        }
+      `}</style>
     </footer>
   );
 }

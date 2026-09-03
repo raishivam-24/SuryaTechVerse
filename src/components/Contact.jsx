@@ -1,74 +1,226 @@
-import Eyebrow from "./ui/Eyebrow.jsx";
-import Rule from "./ui/Rule.jsx";
-import Field from "./ui/Field.jsx";
-import ContactRow from "./ui/ContactRow.jsx";
-import { SERVICES, CONTACT } from "../data/content.js";
+import React, { useState } from "react";
+import { contact } from "../data.js";
+
+function inputStyle() {
+  return {
+    width: "100%",
+    background: "rgba(255,255,255,0.03)",
+    border: "1px solid var(--border-strong)",
+    borderRadius: 10,
+    padding: "12px 14px",
+    fontFamily: "'Hanken Grotesk', sans-serif",
+    fontSize: 15,
+    color: "var(--text-primary)",
+    outline: "none",
+    boxSizing: "border-box",
+  };
+}
 
 export default function Contact() {
-  function handleSubmit(e) {
-    e.preventDefault();
-    // Wire this up to your backend, form service, or email API.
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    service: contact.serviceOptions[0],
+    message: "",
+  });
+  const [sent, setSent] = useState(false);
+
+  function handleChange(e) {
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    setSent(true);
+  }
+
+  const contactItems = [
+    { icon: "✉", label: "Email Us", value: contact.email },
+    { icon: "💼", label: "Business Inquiries", value: contact.businessEmail },
+    { icon: "📞", label: "Call Us", value: contact.phone },
+    { icon: "📍", label: "Location", value: contact.location },
+  ];
+
   return (
-    <section id="contact" className="px-5 md:px-10 py-20 md:py-28">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-14 items-start">
+    <section id="contact" style={{ padding: "160px 0", background: "var(--bg)", position: "relative" }}>
+      <div
+        style={{
+          maxWidth: 1440,
+          margin: "0 auto",
+          padding: "0 24px",
+          display: "grid",
+          gridTemplateColumns: "1fr",
+          gap: 56,
+          alignItems: "center",
+        }}
+        className="stv-contact-grid"
+      >
         <div>
-          <Eyebrow>Get In Touch</Eyebrow>
-          <Rule />
-          <h2 className="font-headline font-semibold text-3xl md:text-4xl mb-6 text-ink">
-            Let's build the future together
+          <h2
+            style={{
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 600,
+              fontSize: "clamp(30px,4vw,40px)",
+              color: "var(--text-primary)",
+              marginBottom: 20,
+            }}
+          >
+            {contact.heading}
           </h2>
-          <p className="mb-8 max-w-md leading-relaxed text-slate">
-            Ready to elevate your digital presence? Tell us what you're
-            working on and we'll follow up within one business day.
+          <p style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 16, lineHeight: 1.6, color: "var(--text-secondary)", marginBottom: 36 }}>
+            {contact.description}
           </p>
-          <div className="space-y-5">
-            <ContactRow icon="@" label="Email Us" value={CONTACT.email} />
-            <ContactRow icon="◎" label="Location" value={CONTACT.location} />
-            <ContactRow
-              icon="in"
-              label="Connect with the Founder"
-              value="LinkedIn Profile"
-              href={CONTACT.linkedin}
-            />
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            {contactItems.map((c) => (
+              <div key={c.label} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    background: "rgba(242,202,80,0.1)",
+                    border: "1px solid rgba(242,202,80,0.25)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                    fontSize: 15,
+                    color: "var(--gold)",
+                  }}
+                >
+                  {c.icon}
+                </div>
+                <div>
+                  <h4 style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 13, fontWeight: 600, color: "var(--text-primary)", margin: 0 }}>
+                    {c.label}
+                  </h4>
+                  <p style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 15, color: "var(--text-secondary)", margin: "2px 0 0" }}>
+                    {c.value}
+                  </p>
+                </div>
+              </div>
+            ))}
+            <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  background: "rgba(242,202,80,0.1)",
+                  border: "1px solid rgba(242,202,80,0.25)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                  fontSize: 15,
+                  color: "var(--gold)",
+                }}
+              >
+                🔗
+              </div>
+              <div>
+                <h4 style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 13, fontWeight: 600, color: "var(--text-primary)", margin: 0 }}>
+                  Connect with the Founder
+                </h4>
+                <a
+                  href={contact.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 15, color: "var(--gold)", textDecoration: "none" }}
+                >
+                  LinkedIn Profile ↗
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 32 }}>
+            {contact.hashtags.map((tag) => (
+              <span key={tag} style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 12, color: "var(--text-muted)" }}>
+                {tag}
+              </span>
+            ))}
           </div>
         </div>
 
         <form
-          className="rounded-lg p-8 space-y-5 bg-paper border border-line"
           onSubmit={handleSubmit}
+          className="glass-panel"
+          style={{
+            borderRadius: 20,
+            padding: "40px 32px",
+            border: "1px solid var(--border)",
+            display: "flex",
+            flexDirection: "column",
+            gap: 20,
+          }}
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <Field label="First Name" placeholder="John" name="firstName" />
-            <Field label="Last Name" placeholder="Doe" name="lastName" />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+            <div>
+              <label style={{ display: "block", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 13, color: "var(--text-secondary)", marginBottom: 6 }}>
+                First Name
+              </label>
+              <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="John" style={inputStyle()} />
+            </div>
+            <div>
+              <label style={{ display: "block", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 13, color: "var(--text-secondary)", marginBottom: 6 }}>
+                Last Name
+              </label>
+              <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Doe" style={inputStyle()} />
+            </div>
           </div>
-          <Field label="Email Address" placeholder="john@company.com" type="email" name="email" />
           <div>
-            <label className="block text-xs font-medium mb-2 text-ink">Interested Service</label>
-            <select
-              name="service"
-              className="w-full rounded-sm px-4 py-3 text-sm bg-transparent border border-line text-ink focus:border-bronze transition-colors"
-            >
-              {SERVICES.map((s) => (
-                <option key={s.title}>{s.title}</option>
+            <label style={{ display: "block", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 13, color: "var(--text-secondary)", marginBottom: 6 }}>
+              Email Address
+            </label>
+            <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="john@company.com" style={inputStyle()} />
+          </div>
+          <div>
+            <label style={{ display: "block", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 13, color: "var(--text-secondary)", marginBottom: 6 }}>
+              Interested Service
+            </label>
+            <select name="service" value={form.service} onChange={handleChange} style={inputStyle()}>
+              {contact.serviceOptions.map((s) => (
+                <option key={s} style={{ background: "var(--surface-1)" }}>
+                  {s}
+                </option>
               ))}
             </select>
           </div>
           <div>
-            <label className="block text-xs font-medium mb-2 text-ink">Message</label>
+            <label style={{ display: "block", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 13, color: "var(--text-secondary)", marginBottom: 6 }}>
+              Message
+            </label>
             <textarea
-              rows={4}
               name="message"
+              value={form.message}
+              onChange={handleChange}
               placeholder="Tell us about your project..."
-              className="w-full rounded-sm px-4 py-3 text-sm resize-none bg-transparent border border-line text-ink focus:border-bronze transition-colors"
+              rows={4}
+              style={{ ...inputStyle(), resize: "none" }}
             />
           </div>
           <button
             type="submit"
-            className="w-full py-3.5 rounded-sm text-sm font-medium tracking-wide bg-ink text-bronze hover:bg-ink-deep transition-colors"
+            className="glow-gold"
+            style={{
+              background: "var(--gold-container)",
+              color: "var(--on-gold)",
+              border: "none",
+              padding: "14px 0",
+              borderRadius: 999,
+              fontFamily: "'Hanken Grotesk', sans-serif",
+              fontSize: 14,
+              fontWeight: 600,
+              letterSpacing: "0.05em",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              transition: "box-shadow 0.3s",
+            }}
           >
-            Send Message
+            {sent ? "Message sent" : "Send Message"}
           </button>
         </form>
       </div>
