@@ -1,30 +1,57 @@
-import React from "react";
-
-const FEATURED_IMAGE =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuCs2SGqjZPrAGUj8cYt1lXBOlCJd2TVcwzxf6y-rWLmc5nqTeOktGxytkx8pU6xt8RP6ayYaOR-XzVObeHGSb8A2i0rEh9xzUpXQV2r-aFdfbGIEljY7JQ7y4IlFoQXupwiD1xpOKkI2gP7WNeN16iE0AHCpKbnCTlpAxc5VhWmQcaW2kd1pMIg-LsYB_nwlotrFh6DywlDqakcpkWmsHpnqaE3tJQ5QWznjKjy7lC2x9b6DCq5iO-C";
+import React, { useState } from "react";
 
 /**
- * Single project card. Purely presentational — all position/scale/opacity
- * transform math lives in ProjectCarousel and is passed down via `style`.
+ * Single project card. Purely presentational (besides its own image
+ * load/error state) — all position/scale/opacity transform math lives in
+ * ProjectCarousel and is passed down via `style`.
+ *
+ * Behavior:
+ * - Active card: it IS a real <a target="_blank"> to the live project URL.
+ *   Using a genuine anchor (instead of window.open() in a click handler)
+ *   means the browser treats it as a normal link click — it can never be
+ *   silently swallowed by a popup blocker.
+ * - Non-active (side) card: a plain clickable <div> that just brings it to
+ *   center (onSelect) — it does NOT navigate anywhere.
  */
 const ProjectCard = React.forwardRef(function ProjectCard(
-  { project, index, isActive, hasPhoto, style, onSelect, transitionMs },
+  { project, index, isActive, style, onSelect, transitionMs, priority },
   ref
 ) {
+  const [imgFailed, setImgFailed] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+  const Wrapper = isActive ? "a" : "div";
+  const wrapperProps = isActive
+    ? {
+        href: project.link,
+        target: "_blank",
+        rel: "noopener noreferrer",
+      }
+    : {
+        onClick: onSelect,
+      };
+
   return (
-    <div
+    <Wrapper
       ref={ref}
       role="group"
       aria-roledescription="slide"
-      aria-label={`${project.name}, project ${index + 1}`}
+      aria-label={
+        isActive
+          ? `${project.name}, project ${index + 1} — opens the live website in a new tab`
+          : `${project.name}, project ${index + 1}`
+      }
       aria-hidden={!isActive}
-      onClick={!isActive ? onSelect : undefined}
+      tabIndex={isActive ? 0 : -1}
       className="stv-carousel-card"
       style={{
         ...style,
         transitionDuration: `${transitionMs}ms`,
-        cursor: isActive ? "default" : "pointer",
+        cursor: "pointer",
+        textDecoration: "none",
+        display: "block",
       }}
+      {...wrapperProps}
     >
       <div
         style={{
@@ -38,21 +65,31 @@ const ProjectCard = React.forwardRef(function ProjectCard(
           boxShadow: isActive ? "0 30px 80px rgba(0,0,0,0.55)" : "0 10px 30px rgba(0,0,0,0.35)",
         }}
       >
-        {hasPhoto ? (
+        {project.image && !imgFailed ? (
           <img
-            src={FEATURED_IMAGE}
-            alt=""
+            src={project.image}
+            alt={`${project.name} — live website screenshot`}
             draggable={false}
+            loading={priority ? "eager" : "lazy"}
+            decoding="async"
+            fetchPriority={priority ? "high" : "auto"}
+            onLoad={() => setImgLoaded(true)}
+            onError={() => setImgFailed(true)}
             style={{
               position: "absolute",
               inset: 0,
               width: "100%",
               height: "100%",
               objectFit: "cover",
+              objectPosition: "top center",
               userSelect: "none",
+              opacity: imgLoaded ? 1 : 0,
+              transition: "opacity 500ms ease",
             }}
           />
-        ) : (
+        ) : null}
+
+        {(!project.image || imgFailed || !imgLoaded) && (
           <>
             <div
               style={{
@@ -87,6 +124,33 @@ const ProjectCard = React.forwardRef(function ProjectCard(
             background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.35) 45%, transparent 70%)",
           }}
         />
+
+        {isActive && (
+          <span
+            style={{
+              position: "absolute",
+              top: "clamp(14px, 2vw, 24px)",
+              right: "clamp(14px, 2vw, 24px)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "6px 12px",
+              borderRadius: 999,
+              background: "rgba(10,10,10,0.55)",
+              border: "1px solid rgba(242,202,80,0.35)",
+              fontFamily: "'Hanken Grotesk', sans-serif",
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--gold)",
+              opacity: isActive ? 1 : 0,
+              transition: `opacity ${transitionMs}ms ease`,
+            }}
+          >
+            Visit Live Site ↗
+          </span>
+        )}
 
         <div
           style={{
@@ -140,10 +204,10 @@ const ProjectCard = React.forwardRef(function ProjectCard(
           >
             {project.desc}
           </p>
-          <a
-            href="#contact"
-            tabIndex={isActive ? 0 : -1}
-            onClick={(e) => e.stopPropagation()}
+          {/* Decorative only — the whole card is already the real link when
+              active, so this isn't a second/nested anchor. */}
+          <span
+            aria-hidden="true"
             style={{
               display: "inline-block",
               fontFamily: "'Hanken Grotesk', sans-serif",
@@ -152,19 +216,17 @@ const ProjectCard = React.forwardRef(function ProjectCard(
               letterSpacing: "0.15em",
               textTransform: "uppercase",
               color: "var(--gold)",
-              textDecoration: "none",
               borderBottom: "1px solid rgba(242,202,80,0.4)",
               paddingBottom: 3,
               opacity: isActive ? 1 : 0,
-              pointerEvents: isActive ? "auto" : "none",
               transition: `opacity ${transitionMs}ms ease`,
             }}
           >
             View Case Study
-          </a>
+          </span>
         </div>
       </div>
-    </div>
+    </Wrapper>
   );
 });
 

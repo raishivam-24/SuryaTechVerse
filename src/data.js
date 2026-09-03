@@ -186,6 +186,6 @@ export const contact = {
 };
 
 export const footer = {
-  copyright: "© 2026 SURYA techVerse. All rights reserved.",
+  copyright: "© 2024 SURYA techVerse. All rights reserved.",
   links: ["Privacy", "Terms", "Twitter", "LinkedIn"],
 };

@@ -107,7 +107,7 @@ export default function ProjectCarousel({ projects }) {
   }
 
   function handlePointerDown(e) {
-    if (e.target.closest && e.target.closest("button")) return;
+    if (e.target.closest && (e.target.closest("button") || e.target.closest("a"))) return;
     setDragging(true);
     dragState.current = { startX: e.clientX, deltaX: 0, pointerId: e.pointerId };
     e.currentTarget.setPointerCapture?.(e.pointerId);
@@ -125,10 +125,14 @@ export default function ProjectCarousel({ projects }) {
     setDragging(false);
   }
 
+  // Screenshots are captured at 1200x900 (4:3 => height = width * 0.75).
+  // On mobile we size card height from that ratio (not a fixed vh) so a
+  // wide screenshot never gets crushed/cropped into a portrait sliver.
+  const MOBILE_SCREENSHOT_RATIO = 0.75;
   const ACTIVE_W = isMobile ? "86vw" : "min(64vw, 820px)";
-  const ACTIVE_H = isMobile ? "48vh" : "58vh";
+  const ACTIVE_H = isMobile ? `calc(86vw * ${MOBILE_SCREENSHOT_RATIO})` : "58vh";
   const SIDE_W = isMobile ? "78vw" : "min(30vw, 380px)";
-  const SIDE_H = ACTIVE_H;
+  const SIDE_H = isMobile ? `calc(78vw * ${MOBILE_SCREENSHOT_RATIO})` : ACTIVE_H;
   const STEP = isMobile ? 88 : 34; // vw offset per step
 
   function cardStyle(offset) {
@@ -171,7 +175,7 @@ export default function ProjectCarousel({ projects }) {
           width: "100%",
           maxWidth: "100vw",
           overflow: "hidden",
-          height: isMobile ? "calc(48vh + 40px)" : "calc(58vh + 40px)",
+          height: isMobile ? `calc(86vw * ${MOBILE_SCREENSHOT_RATIO} + 40px)` : "calc(58vh + 40px)",
           outline: "none",
         }}
         onPointerDown={handlePointerDown}
@@ -188,7 +192,7 @@ export default function ProjectCarousel({ projects }) {
               project={p}
               index={i}
               isActive={isActive}
-              hasPhoto={i === 0}
+              priority={isActive}
               transitionMs={transitionMs}
               onSelect={() => goTo(i)}
               style={cardStyle(offset)}
