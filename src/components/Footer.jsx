@@ -55,6 +55,7 @@ export default function Footer() {
               <a
                 key={l}
                 href="#"
+                className="stv-link-underline"
                 style={{
                   fontFamily: "'Hanken Grotesk', sans-serif",
                   fontSize: 15,

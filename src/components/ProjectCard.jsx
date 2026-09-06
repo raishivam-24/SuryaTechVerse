@@ -65,6 +65,30 @@ const ProjectCard = React.forwardRef(function ProjectCard(
           boxShadow: isActive ? "0 30px 80px rgba(0,0,0,0.55)" : "0 10px 30px rgba(0,0,0,0.35)",
         }}
       >
+        {isActive && (
+          <>
+            {[
+              { top: 14, left: 14, borderTop: "1.5px solid var(--gold)", borderLeft: "1.5px solid var(--gold)" },
+              { top: 14, right: 14, borderTop: "1.5px solid var(--gold)", borderRight: "1.5px solid var(--gold)" },
+              { bottom: 14, left: 14, borderBottom: "1.5px solid var(--gold)", borderLeft: "1.5px solid var(--gold)" },
+              { bottom: 14, right: 14, borderBottom: "1.5px solid var(--gold)", borderRight: "1.5px solid var(--gold)" },
+            ].map((pos, idx) => (
+              <span
+                key={idx}
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  width: 22,
+                  height: 22,
+                  zIndex: 20,
+                  opacity: 0.85,
+                  pointerEvents: "none",
+                  ...pos,
+                }}
+              />
+            ))}
+          </>
+        )}
         {project.image && !imgFailed ? (
           <img
             src={project.image}

@@ -16,6 +16,11 @@ function inputStyle() {
   };
 }
 
+// Turns "+91 6263471960" into "916263471960" — the digits-only format wa.me needs.
+function phoneToWaId(phone) {
+  return phone.replace(/[^\d]/g, "");
+}
+
 export default function Contact() {
   const [form, setForm] = useState({
     firstName: "",
@@ -24,7 +29,6 @@ export default function Contact() {
     service: contact.serviceOptions[0],
     message: "",
   });
-  const [sent, setSent] = useState(false);
 
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -32,7 +36,20 @@ export default function Contact() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    setSent(true);
+
+    const waMessage = [
+      `New inquiry from ${form.firstName} ${form.lastName}`.trim(),
+      form.email && `Email: ${form.email}`,
+      `Interested in: ${form.service}`,
+      form.message && `Message: ${form.message}`,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const waId = phoneToWaId(contact.phone);
+    const waUrl = `https://wa.me/${waId}?text=${encodeURIComponent(waMessage)}`;
+
+    window.open(waUrl, "_blank", "noopener,noreferrer");
   }
 
   const contactItems = [
@@ -135,14 +152,6 @@ export default function Contact() {
               </div>
             </div>
           </div>
-
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 32 }}>
-            {contact.hashtags.map((tag) => (
-              <span key={tag} style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 12, color: "var(--text-muted)" }}>
-                {tag}
-              </span>
-            ))}
-          </div>
         </div>
 
         <form
@@ -157,25 +166,40 @@ export default function Contact() {
             gap: 20,
           }}
         >
+          <p
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              fontFamily: "'Hanken Grotesk', sans-serif",
+              fontSize: 13,
+              color: "var(--text-secondary)",
+              margin: 0,
+            }}
+          >
+            <span style={{ color: "#25D366", fontSize: 16 }}>●</span>
+            Sends straight to our WhatsApp — no email round-trip.
+          </p>
+
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
             <div>
               <label style={{ display: "block", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 13, color: "var(--text-secondary)", marginBottom: 6 }}>
                 First Name
               </label>
-              <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="John" style={inputStyle()} />
+              <input name="firstName" value={form.firstName} onChange={handleChange} placeholder="Shivam" style={inputStyle()} required />
             </div>
             <div>
               <label style={{ display: "block", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 13, color: "var(--text-secondary)", marginBottom: 6 }}>
                 Last Name
               </label>
-              <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Doe" style={inputStyle()} />
+              <input name="lastName" value={form.lastName} onChange={handleChange} placeholder="Rai" style={inputStyle()} />
             </div>
           </div>
           <div>
             <label style={{ display: "block", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 13, color: "var(--text-secondary)", marginBottom: 6 }}>
               Email Address
             </label>
-            <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="john@company.com" style={inputStyle()} />
+            <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="shivam123@gmail.com" style={inputStyle()} />
           </div>
           <div>
             <label style={{ display: "block", fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 13, color: "var(--text-secondary)", marginBottom: 6 }}>
@@ -206,21 +230,25 @@ export default function Contact() {
             type="submit"
             className="glow-gold"
             style={{
-              background: "var(--gold-container)",
-              color: "var(--on-gold)",
+              background: "#25D366",
+              color: "#0b1b12",
               border: "none",
               padding: "14px 0",
               borderRadius: 999,
               fontFamily: "'Hanken Grotesk', sans-serif",
               fontSize: 14,
-              fontWeight: 600,
+              fontWeight: 700,
               letterSpacing: "0.05em",
               textTransform: "uppercase",
               cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
               transition: "box-shadow 0.3s",
             }}
           >
-            {sent ? "Message sent" : "Send Message"}
+            Send via WhatsApp
           </button>
         </form>
       </div>

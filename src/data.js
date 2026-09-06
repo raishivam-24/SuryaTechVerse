@@ -7,7 +7,7 @@ export const brand = {
   initial: "S",
 };
 
-export const navLinks = ["Services", "Work", "About", "Team", "Contact"];
+export const navLinks = ["Services", "Work", "About", , "Contact"];
 
 export const hero = {
   eyebrow: "Your Trusted Growth Partner",
@@ -167,7 +167,7 @@ export const contact = {
   heading: "Let's Build the Future Together",
   description:
     "Ready to elevate your digital presence? Reach out to discuss how our expertise can align with your vision. Grow your business with us — contact now for a consultation.",
-  email: "contact@suryatechverse.co.in",
+  // email: "contact@suryatechverse.co.in",
   businessEmail: "sjbusinessconsultingandtech@gmail.com",
   phone: "+91 6263471960",
   location: "Global Operations",
@@ -186,6 +186,6 @@ export const contact = {
 };
 
 export const footer = {
-  copyright: "© 2024 SURYA techVerse. All rights reserved.",
+  copyright: "© 2026 SURYA techVerse. All rights reserved.",
   links: ["Privacy", "Terms", "Twitter", "LinkedIn"],
 };

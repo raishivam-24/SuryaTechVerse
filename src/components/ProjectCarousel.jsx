@@ -125,15 +125,14 @@ export default function ProjectCarousel({ projects }) {
     setDragging(false);
   }
 
-  // Screenshots are captured at 1200x900 (4:3 => height = width * 0.75).
-  // On mobile we size card height from that ratio (not a fixed vh) so a
-  // wide screenshot never gets crushed/cropped into a portrait sliver.
-  const MOBILE_SCREENSHOT_RATIO = 0.75;
-  const ACTIVE_W = isMobile ? "86vw" : "min(64vw, 820px)";
-  const ACTIVE_H = isMobile ? `calc(86vw * ${MOBILE_SCREENSHOT_RATIO})` : "58vh";
-  const SIDE_W = isMobile ? "78vw" : "min(30vw, 380px)";
-  const SIDE_H = isMobile ? `calc(78vw * ${MOBILE_SCREENSHOT_RATIO})` : ACTIVE_H;
-  const STEP = isMobile ? 88 : 34; // vw offset per step
+  // Desktop cards roughly match the 1200x900 (4:3) screenshots. Mobile cards
+  // are intentionally a tall 9:16 "story" format — a more distinctive,
+  // app-like showcase than a plain landscape thumbnail on small screens.
+  const ACTIVE_W = isMobile ? "68vw" : "min(64vw, 820px)";
+  const ACTIVE_H = isMobile ? "calc(68vw * 16 / 9)" : "58vh";
+  const SIDE_W = isMobile ? "26vw" : "min(30vw, 380px)";
+  const SIDE_H = isMobile ? "calc(26vw * 16 / 9)" : ACTIVE_H;
+  const STEP = isMobile ? 46 : 34; // vw offset per step
 
   function cardStyle(offset) {
     const abs = Math.abs(offset);
@@ -175,7 +174,7 @@ export default function ProjectCarousel({ projects }) {
           width: "100%",
           maxWidth: "100vw",
           overflow: "hidden",
-          height: isMobile ? `calc(86vw * ${MOBILE_SCREENSHOT_RATIO} + 40px)` : "calc(58vh + 40px)",
+          height: isMobile ? "calc(68vw * 16 / 9 + 40px)" : "calc(58vh + 40px)",
           outline: "none",
         }}
         onPointerDown={handlePointerDown}
@@ -226,29 +225,63 @@ export default function ProjectCarousel({ projects }) {
         </button>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center", gap: 10, marginTop: 28 }}>
-        {projects.map((p, i) => (
-          <button
-            key={p.name}
-            type="button"
-            onClick={(e) => {
-              goTo(i);
-              e.currentTarget.blur();
-            }}
-            aria-label={`Go to ${p.name}`}
-            aria-current={i === active}
-            style={{
-              width: i === active ? 26 : 8,
-              height: 8,
-              borderRadius: 999,
-              border: "none",
-              padding: 0,
-              cursor: "pointer",
-              background: i === active ? "var(--gold)" : "rgba(255,255,255,0.2)",
-              transition: `width ${transitionMs}ms ${EASING}, background 300ms ease`,
-            }}
-          />
-        ))}
+      {/* Numbered, editorial-style pagination with an autoplay progress sweep —
+          a more "classic" indicator than plain dots. */}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14, marginTop: 32 }}>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12 }}>
+          {projects.map((p, i) => (
+            <button
+              key={p.name}
+              type="button"
+              onClick={(e) => {
+                goTo(i);
+                e.currentTarget.blur();
+              }}
+              aria-label={`Go to ${p.name}`}
+              aria-current={i === active}
+              style={{
+                position: "relative",
+                width: i === active ? 30 : 8,
+                height: 8,
+                borderRadius: 999,
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+                overflow: "hidden",
+                background: i === active ? "rgba(242,202,80,0.25)" : "rgba(255,255,255,0.18)",
+                transition: `width ${transitionMs}ms ${EASING}, background 300ms ease`,
+              }}
+            >
+              {i === active && !reducedMotion && (
+                <span
+                  key={active}
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: 999,
+                    background: "var(--gold)",
+                    transformOrigin: "left center",
+                    animation: `stv-dot-fill ${AUTOPLAY_MS}ms linear forwards`,
+                    animationPlayState: paused || dragging ? "paused" : "running",
+                  }}
+                />
+              )}
+              {i === active && (reducedMotion || dragging) && (
+                <span style={{ position: "absolute", inset: 0, borderRadius: 999, background: "var(--gold)" }} />
+              )}
+            </button>
+          ))}
+        </div>
+        <span
+          style={{
+            fontFamily: "'Hanken Grotesk', sans-serif",
+            fontSize: 12,
+            letterSpacing: "0.15em",
+            color: "var(--text-muted)",
+          }}
+        >
+          {String(active + 1).padStart(2, "0")} <span style={{ opacity: 0.5 }}>/</span> {String(n).padStart(2, "0")}
+        </span>
       </div>
 
       <span

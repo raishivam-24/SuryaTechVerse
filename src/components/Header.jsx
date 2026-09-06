@@ -1,8 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { brand, navLinks, hero } from "../data.js";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 20);
+    }
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <nav
@@ -12,10 +22,12 @@ export default function Header() {
         left: 0,
         right: 0,
         zIndex: 50,
-        background: "rgba(19,19,19,0.4)",
+        background: scrolled ? "rgba(10,10,10,0.75)" : "rgba(19,19,19,0.35)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
-        borderBottom: "1px solid var(--border)",
+        borderBottom: scrolled ? "1px solid rgba(212,175,55,0.2)" : "1px solid var(--border)",
+        boxShadow: scrolled ? "0 8px 30px rgba(0,0,0,0.35)" : "none",
+        transition: "background 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease",
       }}
     >
       <div
@@ -23,10 +35,11 @@ export default function Header() {
           maxWidth: 1440,
           margin: "0 auto",
           padding: "0 24px",
-          height: 80,
+          height: scrolled ? 68 : 80,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          transition: "height 0.35s ease",
         }}
       >
         <a
@@ -48,6 +61,7 @@ export default function Header() {
             <a
               key={link}
               href={`#${link.toLowerCase()}`}
+              className="stv-link-underline"
               style={{
                 fontFamily: "'Hanken Grotesk', sans-serif",
                 fontSize: 13,
@@ -56,7 +70,6 @@ export default function Header() {
                 fontWeight: i === 0 ? 700 : 500,
                 textDecoration: "none",
                 color: i === 0 ? "var(--gold)" : "var(--text-secondary)",
-                borderBottom: i === 0 ? "2px solid var(--gold)" : "2px solid transparent",
                 paddingBottom: 4,
                 transition: "color 0.3s",
               }}
@@ -92,6 +105,7 @@ export default function Header() {
           onClick={() => setOpen((o) => !o)}
           className="stv-menu-btn"
           aria-label="Toggle menu"
+          aria-expanded={open}
           style={{
             background: "none",
             border: "none",
@@ -101,7 +115,7 @@ export default function Header() {
             padding: 8,
           }}
         >
-          ☰
+          {open ? "✕" : "☰"}
         </button>
       </div>
 
@@ -113,7 +127,7 @@ export default function Header() {
             display: "flex",
             flexDirection: "column",
             gap: 14,
-            background: "rgba(10,10,10,0.9)",
+            background: "rgba(10,10,10,0.92)",
           }}
         >
           {navLinks.map((link) => (

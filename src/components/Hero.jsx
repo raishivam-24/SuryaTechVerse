@@ -16,22 +16,54 @@ export default function Hero() {
       }}
     >
       <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+        {/* Slow-drifting gold/indigo gradient mesh — pure CSS, no network
+            image dependency, so the hero always renders instantly and
+            never shows a broken/blank background. */}
         <div
           style={{
             position: "absolute",
-            inset: 0,
-            opacity: 0.4,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundImage:
-              "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBmYa9mkzfi5hOPdUqRbCYEAefoAuugNlZqAJ4C-J8AtxarHSgKPlR9a7-vS1POUgmRkdMtHOMf4ssW1Yw-YYe4db27Ym15woIhUDnhaGYo8-kWE3RAQSwYESy7IXzJ59Llb2xYda5RDdy2KN44ByzPKMx7GyVYd8ewDqNn2Xc80U-4dOOKIQOX7nhsoFYNSA5vXLlfrP_Ic3aZXeZ-_l9xyxFQ5QiRPGeFE7QyzobUTTZNe-pYMusy')",
+            inset: "-10%",
+            background:
+              "radial-gradient(ellipse 60% 50% at 25% 25%, rgba(242,202,80,0.16), transparent 60%)," +
+              "radial-gradient(ellipse 55% 55% at 78% 30%, rgba(106,46,224,0.22), transparent 60%)," +
+              "radial-gradient(ellipse 60% 60% at 50% 85%, rgba(242,202,80,0.08), transparent 65%)",
+            animation: "stv-hero-drift 18s ease-in-out infinite",
+            willChange: "transform",
+          }}
+        />
+        <div
+          className="stv-hero-orb"
+          style={{
+            position: "absolute",
+            top: "18%",
+            left: "12%",
+            width: 220,
+            height: 220,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(242,202,80,0.14), transparent 70%)",
+            filter: "blur(10px)",
+            animation: "stv-float 9s ease-in-out infinite",
+          }}
+        />
+        <div
+          className="stv-hero-orb"
+          style={{
+            position: "absolute",
+            bottom: "15%",
+            right: "10%",
+            width: 260,
+            height: 260,
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(106,46,224,0.18), transparent 70%)",
+            filter: "blur(10px)",
+            animation: "stv-float 11s ease-in-out 1.5s infinite",
           }}
         />
         <div
           style={{
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(to bottom, transparent, rgba(19,19,19,0.5), var(--bg))",
+            background: "linear-gradient(to bottom, transparent 40%, rgba(19,19,19,0.6), var(--bg))",
             zIndex: 1,
           }}
         />

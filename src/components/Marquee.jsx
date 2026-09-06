@@ -2,15 +2,8 @@ import React from "react";
 
 export default function Marquee({ children, reverse }) {
   return (
-    <div style={{ position: "relative", width: "100%", overflow: "hidden", padding: "16px 0" }}>
-      <div
-        style={{
-          display: "flex",
-          gap: 32,
-          width: "max-content",
-          animation: `${reverse ? "stv-marquee-reverse" : "stv-marquee"} 32s linear infinite`,
-        }}
-      >
+    <div className="stv-marquee-viewport" style={{ position: "relative", width: "100%", overflow: "hidden", padding: "16px 0" }}>
+      <div className={`stv-marquee-track ${reverse ? "stv-marquee-track--reverse" : "stv-marquee-track--normal"}`}>
         {children}
         {children}
       </div>

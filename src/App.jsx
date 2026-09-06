@@ -7,6 +7,7 @@ import Work from "./components/Work.jsx";
 import Team from "./components/Team.jsx";
 import Contact from "./components/Contact.jsx";
 import Footer from "./components/Footer.jsx";
+import BackToTop from "./components/BackToTop.jsx";
 
 export default function App() {
   return (
@@ -14,13 +15,14 @@ export default function App() {
       <Header />
       <main>
         <Hero />
-        <Services />
         <Work />
+        <Services />
         <About />
         {/* <Team /> */}
         <Contact />
       </main>
       <Footer />
+      <BackToTop />
     </div>
   );
 }

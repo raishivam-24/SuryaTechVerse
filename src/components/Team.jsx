@@ -1,11 +1,12 @@
 import React from "react";
+import FadeIn from "./FadeIn.jsx";
 import Marquee from "./Marquee.jsx";
 import { team } from "../data.js";
 
 export default function Team() {
   return (
     <section id="team" style={{ padding: "160px 0", background: "var(--surface-2)" }}>
-      <div style={{ maxWidth: 1440, margin: "0 auto", padding: "0 24px", marginBottom: 64, textAlign: "center" }}>
+      <FadeIn style={{ maxWidth: 1440, margin: "0 auto 64px", padding: "0 24px", textAlign: "center" }}>
         <h2
           style={{
             fontFamily: "'Playfair Display', serif",
@@ -21,13 +22,13 @@ export default function Team() {
         <p style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 16, color: "var(--text-secondary)" }}>
           The minds driving digital excellence.
         </p>
-      </div>
+      </FadeIn>
 
       <Marquee reverse>
         {team.map((m) => (
           <div
             key={m.name}
-            className="glass-panel"
+            className="glass-panel stv-hover-lift"
             style={{
               width: 280,
               flex: "0 0 auto",

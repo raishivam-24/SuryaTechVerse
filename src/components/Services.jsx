@@ -1,36 +1,24 @@
 import React from "react";
 import { services } from "../data.js";
 
+function shorten(text, maxWords = 9) {
+  const words = text.trim().split(/\s+/);
+  if (words.length <= maxWords) return text;
+  return words.slice(0, maxWords).join(" ") + "…";
+}
+
 function ServiceCard({ service, index, spanClass = "", minHeight = 260 }) {
   return (
-    <a
-      href="#contact"
+    <div
       className={`service-card glass-panel ${spanClass}`}
-      aria-label={`${service.title} — get in touch about this service`}
       style={{
         borderRadius: 20,
         padding: "clamp(22px, 3vw, 32px)",
         position: "relative",
         overflow: "hidden",
         border: "1px solid var(--border)",
-        display: "block",
-        textDecoration: "none",
       }}
     >
-      {/* ambient glow, brightens on hover via .service-card:hover in index.css */}
-      <div
-        style={{
-          position: "absolute",
-          top: -40,
-          right: -40,
-          width: 140,
-          height: 140,
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(242,202,80,0.16), transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-
       <div
         style={{
           position: "relative",
@@ -40,23 +28,25 @@ function ServiceCard({ service, index, spanClass = "", minHeight = 260 }) {
           height: "100%",
           justifyContent: "space-between",
           minHeight,
-          gap: 24,
+          gap: 20,
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          {/* Icon tile enlarged — carries more visual weight than the old small badge */}
           <span
             className="service-icon"
             style={{
-              width: "clamp(48px, 5vw, 60px)",
-              height: "clamp(48px, 5vw, 60px)",
-              borderRadius: 16,
+              width: "clamp(72px, 9vw, 96px)",
+              height: "clamp(72px, 9vw, 96px)",
+              borderRadius: 20,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "clamp(22px, 2.4vw, 28px)",
+              fontSize: "clamp(32px, 4vw, 42px)",
               lineHeight: 1,
-              background: "linear-gradient(155deg, rgba(242,202,80,0.16), rgba(106,46,224,0.12))",
-              border: "1px solid rgba(242,202,80,0.25)",
+              background: "linear-gradient(155deg, rgba(242,202,80,0.2), rgba(106,46,224,0.16))",
+              border: "1px solid rgba(242,202,80,0.3)",
+              boxShadow: "0 12px 30px rgba(0,0,0,0.35)",
             }}
           >
             {service.icon}
@@ -80,12 +70,11 @@ function ServiceCard({ service, index, spanClass = "", minHeight = 260 }) {
         <div>
           <h3
             style={{
-              fontFamily: "'Hanken Grotesk', sans-serif",
-              fontWeight: 500,
+              fontFamily: "'Playfair Display', serif",
+              fontWeight: 600,
               fontSize: "clamp(19px, 2vw, 24px)",
-              letterSpacing: "0.01em",
               color: "var(--text-primary)",
-              marginBottom: 8,
+              marginBottom: 6,
             }}
           >
             {service.title}
@@ -93,13 +82,13 @@ function ServiceCard({ service, index, spanClass = "", minHeight = 260 }) {
           <p
             style={{
               fontFamily: "'Hanken Grotesk', sans-serif",
-              fontSize: "clamp(14px, 1.4vw, 16px)",
-              lineHeight: 1.55,
+              fontSize: 14,
+              lineHeight: 1.45,
               color: "var(--text-secondary)",
-              marginBottom: 16,
+              marginBottom: 14,
             }}
           >
-            {service.desc}
+            {shorten(service.desc)}
           </p>
           <span
             className="stv-service-cta"
@@ -122,7 +111,7 @@ function ServiceCard({ service, index, spanClass = "", minHeight = 260 }) {
           </span>
         </div>
       </div>
-    </a>
+    </div>
   );
 }
 
@@ -152,6 +141,19 @@ export default function Services() {
           className="stv-services-header"
         >
           <div>
+            <span
+              style={{
+                display: "block",
+                fontFamily: "'Playfair Display', serif",
+                fontStyle: "italic",
+                fontSize: 16,
+                color: "var(--gold)",
+                marginBottom: 12,
+                letterSpacing: "0.02em",
+              }}
+            >
+              ( What We Offer )
+            </span>
             <h2
               style={{
                 fontFamily: "'Playfair Display', serif",
@@ -170,16 +172,14 @@ export default function Services() {
           </p>
         </div>
 
-        {/* Mobile & tablet: clean, uniform 1/2-column grid — every card gets equal
-            visual weight, which reads far better than a squeezed bento layout
-            on narrow screens. */}
+        {/* Mobile & tablet: uniform 1/2-column grid */}
         <div className="stv-services-simple">
           {services.map((s, i) => (
             <ServiceCard key={s.title} service={s} index={i} minHeight={220} />
           ))}
         </div>
 
-        {/* Desktop (>=1024px): the original asymmetric bento showcase. */}
+        {/* Desktop (>=1024px): asymmetric bento showcase */}
         <div className="stv-services-bento">
           <ServiceCard service={services[0]} index={0} spanClass="stv-bento-8" minHeight={300} />
           <ServiceCard service={services[1]} index={1} spanClass="stv-bento-4" minHeight={300} />
@@ -193,8 +193,7 @@ export default function Services() {
           <ServiceCard service={services[5]} index={5} spanClass="stv-bento-8" minHeight={280} />
           <ServiceCard service={services[6]} index={6} spanClass="stv-bento-4" minHeight={280} />
 
-          <a
-            href="#contact"
+          <div
             className="stv-bento-12 service-card glass-panel"
             style={{
               borderRadius: 20,
@@ -205,22 +204,20 @@ export default function Services() {
               alignItems: "center",
               justifyContent: "space-between",
               gap: 24,
-              textDecoration: "none",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
               <span
                 style={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: 16,
+                  width: 72,
+                  height: 72,
+                  borderRadius: 20,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  fontSize: 28,
-                  background: "linear-gradient(155deg, rgba(242,202,80,0.16), rgba(106,46,224,0.12))",
-                  border: "1px solid rgba(242,202,80,0.25)",
-                  flexShrink: 0,
+                  fontSize: 34,
+                  background: "linear-gradient(155deg, rgba(242,202,80,0.2), rgba(106,46,224,0.16))",
+                  border: "1px solid rgba(242,202,80,0.3)",
                 }}
               >
                 {services[7].icon}
@@ -229,8 +226,8 @@ export default function Services() {
                 <h3 style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontWeight: 500, fontSize: 24, color: "var(--text-primary)", marginBottom: 4 }}>
                   {services[7].title}
                 </h3>
-                <p style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 15, color: "var(--text-secondary)", maxWidth: 480 }}>
-                  {services[7].desc}
+                <p style={{ fontFamily: "'Hanken Grotesk', sans-serif", fontSize: 14, color: "var(--text-secondary)", maxWidth: 480 }}>
+                  {shorten(services[7].desc)}
                 </p>
               </div>
             </div>
@@ -249,7 +246,7 @@ export default function Services() {
             >
               Discuss a project →
             </span>
-          </a>
+          </div>
         </div>
       </div>
 
